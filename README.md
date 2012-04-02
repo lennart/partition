@@ -1,7 +1,9 @@
 # Partition
+[![Build Status](https://secure.travis-ci.org/lennart/partition.png)](http://travis-ci.org/lennart/partition)
 
 [Paperclip](http://github.com/thoughtbot/paperclip)-style id partitioning of 
 folders written for [node.js](http://nodejs.org) including a simple __CLI__.
+
 
 
 # Installation
