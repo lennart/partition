@@ -15,12 +15,16 @@
     "test": "make test"
   },
   "dependencies": {
-    "commander": "*",
-    "lazylines": "*",
+    "commander": "https://github.com/visionmedia/commander.js/tarball/master",
+    "lazylines": "https://github.com/rauschma/lazylines/tarball/master",
     "underscore.string": "*",
     "underscore": "*",
     "mkdirp": "*",
-    "glob": ">= 3.0"
+    "graceful-fs": "https://github.com/isaacs/node-graceful-fs/tarball/master",
+    "lru-cache": "https://github.com/isaacs/node-lru-cache/tarball/master",
+    "minimatch": "https://github.com/isaacs/minimatch/tarball/master",
+    "glob": "https://github.com/isaacs/node-glob/tarball/master"
+
   },
   "devDependencies": {
     "mocha": ">= 1.0",
