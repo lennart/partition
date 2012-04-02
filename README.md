@@ -4,13 +4,11 @@
 [Paperclip](http://github.com/thoughtbot/paperclip)-style id partitioning of 
 folders written for [node.js](http://nodejs.org) including a simple __CLI__.
 
-
-
-# Installation
+## Installation
 
     npm install partition
 
-# Usage
+## Usage
 
 ```shell
 $ ls .
@@ -36,3 +34,8 @@ partition.link(123445322, function(err) {
 ```
 
 Will print `Linked 123445322 to /tmp/123/445/322`
+
+
+## Feedback
+
+If you find this library/tool useful, please tell me about it. If not, do the same, but be sure to do it in the [issue tracker](http://github.com/lennart/partition/issues).
