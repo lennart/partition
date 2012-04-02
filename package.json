@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "mocha": "https://github.com/visionmedia/mocha/tarball/master",
-    "touch": "https://github.com/isaacs/node-touch/tarball/0.0.1",
+    "touch": "https://github.com/lennart/node-touch/tarball/master",
     "expect.js": "https://github.com/LearnBoost/expect.js/tarball/0.1.2",
     "shelljs": "https://github.com/lennart/shelljs/tarball/master"
   },
