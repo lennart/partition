@@ -11,7 +11,9 @@
     "test": "make test"
   },
   "dependencies": {
-    "underscore.string": "*"
+    "underscore.string": "*",
+    "underscore": "*",
+    "mkdirp": "*"
   },
   "devDependencies": {
     "mocha": ">= 1.0",
