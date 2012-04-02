@@ -2,6 +2,7 @@ var _ = require('underscore')._,
     _s = require('underscore.string'),
     mkdirp = require('mkdirp'),
     path = require('path'),
+    glob = require('glob'),
     fs = require('fs');
 
 function Partition(options) {
@@ -19,7 +20,7 @@ Partition.prototype.scheme = function(id) {
     return _s.sprintf("%09d", id).match(/\d{3}/g).join("/");  
   }
   else if (_.isString(id)) {
-    return id.match(/.{3}/g).slice(0,3).join("/");
+    return _s.lpad(id, 9, '0').match(/.{3}/g).slice(0,3).join("/");
   }
   else {
     return null;
@@ -40,13 +41,15 @@ Partition.prototype.resolve = function(target) {
  */
 
 Partition.prototype.prepare = function(target, cb) {
-  var parent = path.dirname(target);
-  path.exists(parent, function(exists) {
+  path.exists(target, function(exists) {
     if(exists) {
-      cb(null);
+      cb({
+        code: "EEXIST",
+        message: "Target already exists: " + target
+      });
     }
     else {
-      mkdirp(parent, function(err) {
+      mkdirp(target, function(err) {
         cb(err);
       });
     }
@@ -63,7 +66,25 @@ Partition.prototype.link = function(id, cb) {
         cb(err);
       }
       else {
-        fs.link(src, target, cb);
+        glob("**/*", { cwd: src }, function(err, files) {
+          if(err) {
+            cb(err);
+          }
+          else {
+            files.forEach(function(match) {
+              var t = path.join(target, match),
+                  f = path.join(src, match);
+      
+              if(fs.statSync(f).isDirectory()) {
+                mkdirp.sync(t);
+              }
+              else {
+                fs.linkSync(f, t);
+              }
+            });
+            cb(null);
+          }
+        });
       }
     });
   }
@@ -71,5 +92,7 @@ Partition.prototype.link = function(id, cb) {
     cb("missing source folder '" + src + "'");
   }
 };
+
+Partition.version = "0.0.1";
 
 module.exports = Partition;

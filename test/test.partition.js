@@ -75,6 +75,10 @@ describe("Partition", function(){
         expect(partition.scheme('32fnj23oio2f')).to.be("32f/nj2/3oi");
       });
 
+      it("should return the partitioned id of the attachment when the id is a short string", function() {
+        expect(partition.scheme('231249')).to.be("000/231/249");
+      });
+
       it("should return null for the partitioned id when the id is null", function() {
         expect(partition.scheme(null)).to.be(null);
       });
@@ -128,11 +132,11 @@ describe("Partition", function(){
 
         it("should create parent folder for scheme", function(done) {
           partition.prepare(target, function(err) {
-            if(path.existsSync(path.dirname(target))) {
+            if(path.existsSync(target)) {
               done();
             }
             else {
-              done(new Error("missing target parent folder " + path.dirname(target)));
+              done(new Error("missing target folder " + target));
             }
           });
         });
@@ -213,6 +217,48 @@ describe("Partition", function(){
               done(new Error("DANGER: linking removed source path: '" + source + ";"));
             }
           });
+        });
+
+        describe("with subfolders", function(){
+          var subfolder, target, file, targetFile;
+
+          beforeEach(function(done){
+            subfolder = partition.resolve("23/snafu");
+            target = partition.resolve(path.join(partition.scheme(23), "snafu"));
+            file = partition.resolve("23/snafu/fnord.txt");
+            targetFile = partition.resolve(path.join(partition.scheme(23), "snafu", "fnord.txt"));
+
+            sh.mkdir("-p", subfolder);
+            touch.sync(file);
+
+            partition.link(23, function(err) {
+              done(err);
+            });
+          });
+
+          it("should have linked subfolder as well", function(){
+            expect(path.existsSync(target)).to.be(true);
+          });
+
+          it("should have linked the file as well", function() {
+            expect(path.existsSync(targetFile)).to.be(true);
+          });
+
+          describe("after deletion of original source folder", function(){
+
+            beforeEach(function(){
+              sh.rm("-Rf", partition.resolve(23));
+            });
+
+            it("should retain subfolders in linked folder", function(){
+              expect(path.existsSync(target)).to.be(true);
+            });
+
+            it("should retain file in subfolder", function(){
+              expect(path.existsSync(targetFile)).to.be(true);
+            });
+          });
+
         });
       });
     });

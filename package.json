@@ -2,22 +2,29 @@
   "author": "Lennart Melzer <lm@artflakes.com>",
   "name": "partition",
   "description": "Partition files into subfolders",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "repository": {
     "url": ""
+  },
+  "bin": {
+    "partition": "./bin/partition.js"
   },
   "main": "index.js",
   "scripts": {
     "test": "make test"
   },
   "dependencies": {
+    "commander": "*",
+    "lazylines": "*",
     "underscore.string": "*",
     "underscore": "*",
-    "mkdirp": "*"
+    "mkdirp": "*",
+    "glob": ">= 3.0"
   },
   "devDependencies": {
     "mocha": ">= 1.0",
+    "touch": "*",
     "expect.js": "*",
     "shelljs": "*"
   },
