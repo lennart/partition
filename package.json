@@ -10,8 +10,14 @@
   "scripts": {
     "test": "make test"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "underscore.string": "*"
+  },
+  "devDependencies": {
+    "mocha": ">= 1.0",
+    "expect.js": "*",
+    "shelljs": "*"
+  },
   "optionalDependencies": {},
   "engines": {
     "node": "*"
