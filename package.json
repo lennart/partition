@@ -19,7 +19,7 @@
     "lazylines": "https://github.com/rauschma/lazylines/tarball/master",
     "underscore.string": "*",
     "underscore": "*",
-    "mkdirp": "*",
+    "mkdirp": "https://github.com/substack/node-mkdirp/tarball/0.3.1",
     "inherits": "https://github.com/isaacs/inherits/tarball/master",
     "graceful-fs": "https://github.com/isaacs/node-graceful-fs/tarball/master",
     "lru-cache": "https://github.com/isaacs/node-lru-cache/tarball/master",
