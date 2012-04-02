@@ -3,9 +3,8 @@
   "name": "partition",
   "description": "Partition files into subfolders",
   "version": "0.0.1",
-  "private": true,
   "repository": {
-    "url": ""
+    "url": "http://github.com/lennart/partition"
   },
   "bin": {
     "partition": "./bin/partition.js"
@@ -25,7 +24,6 @@
     "lru-cache": "https://github.com/isaacs/node-lru-cache/tarball/master",
     "minimatch": "https://github.com/isaacs/minimatch/tarball/master",
     "glob": "https://github.com/isaacs/node-glob/tarball/master"
-
   },
   "devDependencies": {
     "mocha": "https://github.com/visionmedia/mocha/tarball/master",
