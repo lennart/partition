@@ -20,6 +20,7 @@
     "underscore.string": "*",
     "underscore": "*",
     "mkdirp": "*",
+    "inherits": "https://github.com/isaacs/inherits/tarball/master",
     "graceful-fs": "https://github.com/isaacs/node-graceful-fs/tarball/master",
     "lru-cache": "https://github.com/isaacs/node-lru-cache/tarball/master",
     "minimatch": "https://github.com/isaacs/minimatch/tarball/master",
