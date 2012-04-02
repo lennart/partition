@@ -93,6 +93,6 @@ Partition.prototype.link = function(id, cb) {
   }
 };
 
-Partition.version = "0.0.1";
+Partition.version = "0.0.2";
 
 module.exports = Partition;

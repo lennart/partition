@@ -2,7 +2,7 @@
   "author": "Lennart Melzer <lm@artflakes.com>",
   "name": "partition",
   "description": "Partition files into subfolders",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "url": "http://github.com/lennart/partition"
   },
