@@ -28,10 +28,10 @@
 
   },
   "devDependencies": {
-    "mocha": ">= 1.0",
-    "touch": "*",
-    "expect.js": "*",
-    "shelljs": "*"
+    "mocha": "https://github.com/visionmedia/mocha/tarball/master",
+    "touch": "https://github.com/isaacs/node-touch/tarball/0.0.1",
+    "expect.js": "https://github.com/LearnBoost/expect.js/tarball/0.1.2",
+    "shelljs": "https://github.com/lennart/shelljs/tarball/master"
   },
   "optionalDependencies": {},
   "engines": {
