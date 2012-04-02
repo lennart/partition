@@ -190,7 +190,7 @@ describe("Partition", function(){
           }); 
         });
 
-        it("should link to partitioned file", function(done){
+        it("should link to partitioned target", function(done){
           var destination = partition.resolve(partition.scheme(23));
           partition.link(23, function(err) {
             if(path.existsSync(destination)) {
@@ -198,6 +198,19 @@ describe("Partition", function(){
             }
             else {
               done(new Error("missing linked file" + destination));
+            }
+          });
+        });
+
+        it("should keep original source", function(done) {
+          var source = partition.resolve(23);
+
+          partition.link(23, function(err) {
+            if(path.existsSync(source)) {
+              done();
+            }
+            else {
+              done(new Error("DANGER: linking removed source path: '" + source + ";"));
             }
           });
         });
