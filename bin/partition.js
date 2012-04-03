@@ -16,12 +16,12 @@ bin
   .option("-r, --root <folder>", "The root folder to work on [.]", '.')
   .option("-w, --workers <n>", "The number of parallel workers", Number, 10)
   .option("-o, --output <file>", "File to write processed ids to")
-  .option("-e, --error <file>", "File to write error ids to", process.stderr);
+  .option("-e, --error <file>", "File to write error ids to");
 
 bin.parse(process.argv);
 
 out = _.isString(bin.output) ? fs.createWriteStream(bin.output, { flags: "a" }) : process.stdout;
-error = _.isString(bin.output) ? fs.createWriteStream(bin.output, { flags: "a" }) : process.stderr;
+error = _.isString(bin.output) ? fs.createWriteStream(bin.error, { flags: "a" }) : process.stderr;
 
 
 function Worker() { this.working = false; }
