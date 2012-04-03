@@ -20,11 +20,11 @@ var input = new LineReader(process.stdin),
 function complete(id) {
   var cb = function(err) {
     if(err) {
-      console.error(id);
+      process.stderr.write(id + '\n');
     }
 
     // In any case logged that we processed this id
-    console.log(id);
+    process.stdout.write(id + '\n');
   };
 
   partition.link(id, cb);
