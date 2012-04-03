@@ -4,8 +4,25 @@ var bin = require('commander'),
     Partition = require('../'),
     ll = require('lazylines'),
     LineReader = ll.LineReadStream,
+    _ = require('underscore'),
+    fs = require('fs'),
     workers = [],
-    jobs = [], i;
+    jobs = [],
+    counter = 0,
+    out, error, i;
+
+bin
+  .version(Partition.version)
+  .option("-r, --root <folder>", "The root folder to work on [.]", '.')
+  .option("-w, --workers <n>", "The number of parallel workers", Number, 10)
+  .option("-o, --output <file>", "File to write processed ids to")
+  .option("-e, --error <file>", "File to write error ids to", process.stderr);
+
+bin.parse(process.argv);
+
+out = _.isString(bin.output) ? fs.createWriteStream(bin.output, { flags: "a" }) : process.stdout;
+error = _.isString(bin.output) ? fs.createWriteStream(bin.output, { flags: "a" }) : process.stderr;
+
 
 function Worker() { this.working = false; }
 
@@ -14,10 +31,12 @@ Worker.prototype.run = function(id) {
     this.working = true;
     var self = this,
         cb = function(err) {
-          if(err) { process.stderr.write(id + '\n'); }
+          if(err) { error.write(id + '\n'); }
+
+          if ((++counter % 10000) == 0) { process.stdout.write("."); }
 
           // In any case logged that we processed this id
-          process.stdout.write(id + '\n');
+          out.write(id + '\n');
           self.run(next());
         };
 
@@ -47,14 +66,6 @@ function queue(id) {
 
 function next() { return jobs.shift(); }
 
-
-bin
-  .version(Partition.version)
-  .option("-r, --root <folder>", "The root folder to work on [.]", '.')
-  .option("-w, --workers <n>", "The number of parallel workers", Number, 10);
-
-bin.parse(process.argv);
-
 for(i = 0; i < bin.workers; i++) { workers.push(new Worker()); }
 
 process.stdin.resume();
@@ -68,3 +79,5 @@ input.on("line", function(line) {
 
   queue(id);
 });
+
+process.on("exit", function() { process.stdout.write("\n"); });
