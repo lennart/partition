@@ -3,7 +3,44 @@
 var bin = require('commander'),
     Partition = require('../'),
     ll = require('lazylines'),
-    LineReader = ll.LineReadStream;
+    LineReader = ll.LineReadStream,
+    workers = [],
+    jobs = [], i;
+
+function Worker() { this.working = false; }
+
+Worker.prototype.run = function(id) {
+  if(id) {
+    this.working = true;
+    var self = this,
+        cb = function(err) {
+          if(err) { process.stderr.write(id + '\n'); }
+
+          // In any case logged that we processed this id
+          process.stdout.write(id + '\n');
+          self.run(next());
+        };
+
+    partition.link(id, cb);
+  }
+  else { this.working = false; }
+};
+
+function queue(id) {
+  if(jobs.length == 0) {
+    // Queue is empty, check for available worker
+    var found = false;
+    workers.forEach(function(w) { if(!w.working) { w.run(id); } });
+    // Otherwise queue the job
+    if(!found) { jobs.push(id); }
+  }
+  else {
+    jobs.push(id);
+  }
+}
+
+function next() { return jobs.shift(); }
+
 
 bin
   .version(Partition.version)
@@ -12,62 +49,13 @@ bin
 
 bin.parse(process.argv);
 
+for(i = 0; i < bin.workers; i++) { workers.push(new Worker()); }
+
 process.stdin.resume();
 
-
 var input = new LineReader(process.stdin),
-    jobs = [],
-    workers = [],
-    partition = new Partition({root: bin.root}), i;
+    partition = new Partition({root: bin.root});
 
-for(i = 0; i < bin.workers; i++) {
-  workers.push(new Worker());
-}
-
-function Worker() {
-  this.id = Math.random();
-  this.working = false;
-}
-
-Worker.prototype.run = function(id) {
-  if(id) {
-    this.working = true;
-    self = this;
-    var cb = function(err) {
-      if(err) {
-        process.stderr.write(id + '\n');
-      }
-
-      // In any case logged that we processed this id
-      process.stdout.write(id + '\n');
-      self.run(next());
-    };
-
-    partition.link(id, cb);
-  }
-  else {
-    this.working = false;
-  }
-};
-
-function queue(id) {
-  if(jobs.length == 0) {
-    var found = false;
-    workers.forEach(function(w) {
-      if(!w.working) {
-        w.run(id);
-      }
-    });
-    if(!found) { jobs.push(id); }
-  }
-  else {
-    jobs.push(id);
-  }
-}
-
-function next() {
-  return jobs.shift();
-}
 
 input.on("line", function(line) {
   var id = ll.chomp(line);

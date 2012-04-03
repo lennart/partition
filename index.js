@@ -79,7 +79,9 @@ Partition.prototype.link = function(id, cb) {
                 mkdirp.sync(t);
               }
               else {
-                fs.linkSync(f, t);
+                //if(!path.existsSync(t)) {
+                  fs.linkSync(f, t);
+                //}
               }
             });
             cb(null);
