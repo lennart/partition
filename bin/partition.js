@@ -7,7 +7,8 @@ var bin = require('commander'),
 
 bin
   .version(Partition.version)
-  .option("-r, --root <folder>", "The root folder to work on [.]", '.');
+  .option("-r, --root <folder>", "The root folder to work on [.]", '.')
+  .option("-w, --workers <n>", "The number of parallel workers", Number, 10);
 
 bin.parse(process.argv);
 
@@ -15,23 +16,61 @@ process.stdin.resume();
 
 
 var input = new LineReader(process.stdin),
-    partition = new Partition({root: bin.root});
+    jobs = [],
+    workers = [],
+    partition = new Partition({root: bin.root}), i;
 
-function complete(id) {
-  var cb = function(err) {
-    if(err) {
-      process.stderr.write(id + '\n');
-    }
+for(i = 0; i < bin.workers; i++) {
+  workers.push(new Worker());
+}
 
-    // In any case logged that we processed this id
-    process.stdout.write(id + '\n');
-  };
+function Worker() {
+  this.id = Math.random();
+  this.working = false;
+}
 
-  partition.link(id, cb);
+Worker.prototype.run = function(id) {
+  if(id) {
+    this.working = true;
+    self = this;
+    var cb = function(err) {
+      if(err) {
+        process.stderr.write(id + '\n');
+      }
+
+      // In any case logged that we processed this id
+      process.stdout.write(id + '\n');
+      self.run(next());
+    };
+
+    partition.link(id, cb);
+  }
+  else {
+    this.working = false;
+  }
+};
+
+function queue(id) {
+  if(jobs.length == 0) {
+    var found = false;
+    workers.forEach(function(w) {
+      if(!w.working) {
+        w.run(id);
+      }
+    });
+    if(!found) { jobs.push(id); }
+  }
+  else {
+    jobs.push(id);
+  }
+}
+
+function next() {
+  return jobs.shift();
 }
 
 input.on("line", function(line) {
   var id = ll.chomp(line);
 
-  complete(id);
+  queue(id);
 });
