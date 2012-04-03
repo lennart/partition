@@ -30,7 +30,13 @@ function queue(id) {
   if(jobs.length == 0) {
     // Queue is empty, check for available worker
     var found = false;
-    workers.forEach(function(w) { if(!w.working) { w.run(id); } });
+    for(i = 0; i < workers.length; i++) {
+      if(!workers[i].working) {
+        workers[i].run(id);
+        found = true;
+        break;
+      }
+    }
     // Otherwise queue the job
     if(!found) { jobs.push(id); }
   }
